@@ -82,6 +82,7 @@
     <ClInclude Include="Okno.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\rubik%27s cube\Kostka.cpp" />
     <ClCompile Include="Okno.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

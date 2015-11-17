@@ -2,6 +2,7 @@
 #include <gl\GL.h>
 #include <gl\GLU.h>
 #include <math.h>
+#include "Kostka.h"
 
 int WINAPI WinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -145,6 +146,7 @@ LRESULT OknoGL::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			MessageBox(NULL, "Pobranie kontekstu renderowania nie powiod³o siê", "Aplikacja OpenGL", MB_OK | MB_ICONERROR);
 			return EXIT_FAILURE;
 		}
+		GenerujKostkê();
 		UmieœæInformacjeNaPaskuTytu³u(hWnd);
 		UstawienieSceny();
 		break;
@@ -195,13 +197,35 @@ void OknoGL::UstawienieSceny(bool rzutowanieIzometryczne) //wartoœæ domyœlna = f
 	glEnable(GL_DEPTH_TEST); //z-buffer aktywny = ukrywanie przes³oniêtych powierzchni
 }
 
-void RysujSzescian(float x, float y, float z, bool koloruj)
+void RysujSzescian(float x, float y, float z, int colorx, int colory, int colorz)
 {
-	float da = 0.3;
-	float da_2 = da;
+	//bool koloruj = true;
+	float da = 0.6f/2;
+	float da_2 = da - 0.01f;
 
+	//if (koloruj) glColor4f(0.0f, 1.0f, 0.0f, 1.0f);  // zielony
 
-	if (koloruj) glColor4f(0.0f, 1.0f, 0.0f, 1.0f);  // zielony
+	UstawKolor(0);
+	glLineWidth(3.5f);
+	glBegin(GL_LINE_LOOP);
+	//tylna
+	glVertex3f(x + da, y - da, z - da);
+	glVertex3f(x + da, y + da, z - da);
+	glVertex3f(x - da, y + da, z - da);
+	glVertex3f(x - da, y - da, z - da);
+	glEnd();
+
+	//if (koloruj) glColor4f(0.0f, 0.0f, 1.0f, 1.0f);  // niebieski
+
+	glBegin(GL_LINE_LOOP);
+	//przednia
+	glVertex3f(x + da, y - da, z + da);
+	glVertex3f(x + da, y + da, z + da);
+	glVertex3f(x - da, y + da, z + da);
+	glVertex3f(x - da, y - da, z + da);
+	glEnd();
+
+	UstawKolor(colorz);
 
 	glBegin(GL_POLYGON);
 	//tylna
@@ -211,7 +235,7 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glVertex3f(x - da_2, y - da_2, z - da_2);
 	glEnd();
 
-	if (koloruj) glColor4f(0.0f, 0.0f, 1.0f, 1.0f);  // niebieski
+	//if (koloruj) glColor4f(0.0f, 0.0f, 1.0f, 1.0f);  // niebieski
 
 	glBegin(GL_POLYGON);
 	//przednia
@@ -221,7 +245,29 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glVertex3f(x - da_2, y - da_2, z + da_2);
 	glEnd();
 
-	if (koloruj) glColor4f(1.0f, 0.0f, 0.0f, 1.0f);  // czerwony
+	//if (koloruj) glColor4f(1.0f, 0.0f, 0.0f, 1.0f);  // czerwony
+
+	UstawKolor(0);
+
+	glBegin(GL_LINE_LOOP);
+	//prawa
+	glVertex3f(x + da, y + da, z - da);
+	glVertex3f(x + da, y + da, z + da);
+	glVertex3f(x + da, y - da, z + da);
+	glVertex3f(x + da, y - da, z - da);
+	glEnd();
+
+	//if (koloruj) glColor3ub(255, 127, 39);	//pomaranczowy
+
+	glBegin(GL_LINE_LOOP);
+	//lewa
+	glVertex3f(x - da, y + da, z - da);
+	glVertex3f(x - da, y + da, z + da);
+	glVertex3f(x - da, y - da, z + da);
+	glVertex3f(x - da, y - da, z - da);
+	glEnd();
+
+	UstawKolor(colorx);
 
 	glBegin(GL_POLYGON);
 	//prawa
@@ -231,7 +277,7 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glVertex3f(x + da_2, y - da_2, z - da_2);
 	glEnd();
 
-	if (koloruj) glColor3ub(255, 127, 39);	//pomaranczowy
+	//if (koloruj) glColor3ub(255, 127, 39);	//pomaranczowy
 
 	glBegin(GL_POLYGON);
 	//lewa
@@ -241,7 +287,29 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glVertex3f(x - da_2, y - da_2, z - da_2);
 	glEnd();
 
-	if (koloruj) glColor4f(1.0f, 1.0f, 1.0f, 1.0f); //bia³y
+	//if (koloruj) glColor4f(1.0f, 1.0f, 1.0f, 1.0f); //bia³y
+
+	UstawKolor(0);
+
+	glBegin(GL_LINE_LOOP);
+	//góra
+	glVertex3f(x + da, y + da, z - da);
+	glVertex3f(x + da, y + da, z + da);
+	glVertex3f(x - da, y + da, z + da);
+	glVertex3f(x - da, y + da, z - da);
+	glEnd();
+
+	//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);  // ¿ó³ty
+
+	glBegin(GL_LINE_LOOP);
+	//dó³
+	glVertex3f(x + da, y - da, z - da);
+	glVertex3f(x + da, y - da, z + da);
+	glVertex3f(x - da, y - da, z + da);
+	glVertex3f(x - da, y - da, z - da);
+	glEnd();
+
+	UstawKolor(colory);
 
 	glBegin(GL_POLYGON);
 	//góra
@@ -251,7 +319,7 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glVertex3f(x - da_2, y + da_2, z - da_2);
 	glEnd();
 
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);  // ¿ó³ty
+	//glColor4f(1.0f, 1.0f, 0.0f, 1.0f);  // ¿ó³ty
 
 	glBegin(GL_POLYGON);
 	//dó³
@@ -262,7 +330,40 @@ void RysujSzescian(float x, float y, float z, bool koloruj)
 	glEnd();
 }
 
-
+void UstawKolor(int numerKoloru)
+{
+	switch (numerKoloru)
+	{
+	case 0:
+		glColor3ub(0, 0, 0);
+		//czarny - puste pole
+		break;
+	case 1:
+		glColor3ub(7, 205, 22);
+		//zielony
+		break;
+	case 2:
+		glColor3ub(255, 255, 0);
+		//zolty
+		break;
+	case 3:
+		glColor3ub(255, 255, 255);
+		//bialy
+		break;
+	case 4:
+		glColor3ub(0, 128, 192);
+		//niebieski
+		break;
+	case 5:
+		glColor3ub(255, 0, 0);
+		//czerwony
+		break;
+	case 6:
+		glColor3ub(255, 127, 39);
+		//pomaranczowy
+		break;
+	}
+}
 
 void OknoGL::RysujScenê()
 {
@@ -273,46 +374,52 @@ void OknoGL::RysujScenê()
 	//Przygotowanie buforów
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //czyœci bufory
 	glLoadIdentity(); // macierz model-widok = macierz jednostkowa
-	glTranslatef(0.0f, 0.0f, -5.0f);
-	glRotatef(25, 0, 0, 1);
+	glTranslatef(0.0f, 0.0f, -4.0f);
+	//glRotatef(25, 0, 0, 1);
 	glRotatef(25, 1, 0, 0);
-	glRotatef(-50, 0, 1, 0);
-	//¯ó³ty kolor werteksów
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	glRotatef(-205, 0, 1, 0);
 
+	for (int x = 0; x < 3; x++){
+		for (int y = 0; y < 3; y++){
+			for (int z = 0; z < 3; z++){
+				int *kolor = kostka[x][y][z].kolor;
+				RysujSzescian(x*0.6f -0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f, kolor[0], kolor[1], kolor[2]);
+			}
+		}
+	}
 
-	//sciana 1
-	RysujSzescian(0.0, 0.0, 0.0, true);
-	//RysujSzescian(0.7, 0.0, 0.0, true); // nie potrzeba - jest w srodku
-	RysujSzescian(1.4, 0.0, 0.0, true);
-	RysujSzescian(0.0, 0.7, 0.0, true);
-	RysujSzescian(0.7, 0.7, 0.0, true);
-	RysujSzescian(1.4, 0.7, 0.0, true);
-	RysujSzescian(0.0, -0.7, 0.0, true);
-	RysujSzescian(0.7, -0.7, 0.0, true);
-	RysujSzescian(1.4, -0.7, 0.0, true);
+	////sciana 1
+	//RysujSzescian(0.0, 0.0, 0.0, true);
+	////RysujSzescian(0.7, 0.0, 0.0, true); // nie potrzeba - jest w srodku
+	//RysujSzescian(1.4, 0.0, 0.0, true);
+	//RysujSzescian(0.0, 0.7, 0.0, true);
+	//RysujSzescian(0.7, 0.7, 0.0, true);
+	//RysujSzescian(1.4, 0.7, 0.0, true);
+	//RysujSzescian(0.0, -0.7, 0.0, true);
+	//RysujSzescian(0.7, -0.7, 0.0, true);
+	//RysujSzescian(1.4, -0.7, 0.0, true);
 
-	//sciana 2
-	RysujSzescian(0.0, 0.0, 0.7, true);
-	RysujSzescian(0.7, 0.0, 0.7, true);
-	RysujSzescian(1.4, 0.0, 0.7, true);
-	RysujSzescian(0.0, 0.7, 0.7, true);
-	RysujSzescian(0.7, 0.7, 0.7, true);
-	RysujSzescian(1.4, 0.7, 0.7, true);
-	RysujSzescian(0.0, -0.7, 0.7, true);
-	RysujSzescian(0.7, -0.7, 0.7, true);
-	RysujSzescian(1.4, -0.7, 0.7, true);
+	////sciana 2
+	//RysujSzescian(0.0, 0.0, 0.7, true);
+	//RysujSzescian(0.7, 0.0, 0.7, true);
+	//RysujSzescian(1.4, 0.0, 0.7, true);
+	//RysujSzescian(0.0, 0.7, 0.7, true);
+	//RysujSzescian(0.7, 0.7, 0.7, true);
+	//RysujSzescian(1.4, 0.7, 0.7, true);
+	//RysujSzescian(0.0, -0.7, 0.7, true);
+	//RysujSzescian(0.7, -0.7, 0.7, true);
+	//RysujSzescian(1.4, -0.7, 0.7, true);
 
-	//sciana 3
-	RysujSzescian(0.0, 0.0, -0.7, true);
-	RysujSzescian(0.7, 0.0, -0.7, true);
-	RysujSzescian(1.4, 0.0, -0.7, true);
-	RysujSzescian(0.0, 0.7, -0.7, true);
-	RysujSzescian(0.7, 0.7, -0.7, true);
-	RysujSzescian(1.4, 0.7, -0.7, true);
-	RysujSzescian(0.0, -0.7, -0.7, true);
-	RysujSzescian(0.7, -0.7, -0.7, true);
-	RysujSzescian(1.4, -0.7, -0.7, true);
+	////sciana 3
+	//RysujSzescian(0.0, 0.0, -0.7, true);
+	//RysujSzescian(0.7, 0.0, -0.7, true);
+	//RysujSzescian(1.4, 0.0, -0.7, true);
+	//RysujSzescian(0.0, 0.7, -0.7, true);
+	//RysujSzescian(0.7, 0.7, -0.7, true);
+	//RysujSzescian(1.4, 0.7, -0.7, true);
+	//RysujSzescian(0.0, -0.7, -0.7, true);
+	//RysujSzescian(0.7, -0.7, -0.7, true);
+	//RysujSzescian(1.4, -0.7, -0.7, true);
 
 
 	//Z bufora na ekran

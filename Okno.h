@@ -48,4 +48,6 @@ LRESULT CALLBACK WndProc(
 	return okno.WndProc(hWnd, message, wParam, lParam);
 }
 
+void UstawKolor(int numerKoloru);
+
 #endif

@@ -26,5 +26,8 @@
     <ClCompile Include="Okno.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\rubik%27s cube\Kostka.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

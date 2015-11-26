@@ -251,7 +251,16 @@ void UstawKolor(int numerKoloru)
 	}
 }
 
+void timer(void)
+{
+	int sekundy, setne = 0;
+	sekundy = clock();
+	setne = sekundy % 1000 / 10;
+	sekundy /= 1000;
+	sprintf(time_string, "Czas: %2d: %2d: %2d", (sekundy / 60) % 59, sekundy % 60, setne);
 
+	glutPostRedisplay();
+}
 
 void Display()
 {
@@ -281,13 +290,13 @@ void Display()
 	glScalef(scale, scale, scale);
 
 	// obroty obiektu - klawisze kursora
-	//glRotatef(rotatex, 1.0, 0, 0);
-	//glRotatef(rotatey, 0, 1.0, 0);
+	glRotatef(rotatex, 1.0, 0, 0);
+	glRotatef(rotatey, 0, 1.0, 0);
 
 	glRotatef(kat, 0.0f, 1.0f, 0.0f);
 	glRotatef(kat, 0.0f, 0.0f, 1.0f);
 	GenerujKostkê();
-
+	timer();
 	// w³¹czenie testu bufora g³êbokoœci
 	glEnable(GL_DEPTH_TEST);
 
@@ -301,16 +310,11 @@ void Display()
 	}
 
 
+
 	glLoadIdentity();
+
 	glTranslatef(0, 0, -neaar);
 	glColor3ub(255, 255, 255);
-
-	int sekundy, setne = 0;
-	sekundy = clock();
-	setne = sekundy % 1000 / 10;
-	sekundy /= 1000;
-	sprintf(time_string, "Czas: %2d: %2d: %2d", (sekundy / 60) % 59, sekundy % 60, setne);
-
 
 	// narysowanie napisu
 	DrawString(-12.5, 9.5, time_string);
@@ -375,35 +379,35 @@ void Keyboard(unsigned char key, int x, int y)
 
 // obs³uga przycisków myszki
 
-//void MouseButton(int button, int state, int x, int y)
-//{
-//	if (button == GLUT_RIGHT_BUTTON)
-//	{
-//		// zapamiêtanie stanu lewego przycisku myszki
-//		button_state = state;
-//
-//		// zapamiêtanie po³o¿enia kursora myszki
-//		if (state == GLUT_DOWN)
-//		{
-//			button_x = x;
-//			button_y = y;
-//		}
-//	}
-//}
+void MouseButton(int button, int state, int x, int y)
+{
+	if (button == GLUT_RIGHT_BUTTON)
+	{
+		// zapamiêtanie stanu lewego przycisku myszki
+		button_state = state;
+
+		// zapamiêtanie po³o¿enia kursora myszki
+		if (state == GLUT_DOWN)
+		{
+			button_x = x;
+			button_y = y;
+		}
+	}
+}
 
 // obs³uga ruchu kursora myszki
 
-//void MouseMotion(int x, int y)
-//{
-//	if (button_state == GLUT_DOWN)
-//	{
-//		rotatey += 10.1 *(right - left) / glutGet(GLUT_WINDOW_WIDTH) *(x - button_x);
-//		button_x = x;
-//		rotatex += 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
-//		button_y = y;
-//		glutPostRedisplay();
-//	}
-//}
+void MouseMotion(int x, int y)
+{
+	if (button_state == GLUT_DOWN)
+	{
+		rotatey += 10.1 *(right - left) / glutGet(GLUT_WINDOW_WIDTH) *(x - button_x);
+		button_x = x;
+		rotatex += 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
+		button_y = y;
+		glutPostRedisplay();
+	}
+}
 
 
 
@@ -436,11 +440,11 @@ int main(int argc, char * argv[])
 	// do³¹czenie funkcji obs³ugi klawiatury
 	glutKeyboardFunc(Keyboard);
 
-	//// obs³uga przycisków myszki
-	//glutMouseFunc(MouseButton);
+	// obs³uga przycisków myszki
+	glutMouseFunc(MouseButton);
 
-	//// obs³uga ruchu kursora myszki
-	//glutMotionFunc(MouseMotion);
+	// obs³uga ruchu kursora myszki
+	glutMotionFunc(MouseMotion);
 
 	glutIdleFunc(obroty);
 

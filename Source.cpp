@@ -67,7 +67,7 @@ long start_time = 0;
 
 // tablica znaków ze wartoœci¹ FPS
 
-char time_string[100] = "FPS:";
+char time_string[100] = "TEXT:";
 
 // funkcja rysuj¹ca napis w wybranym miejscu
 
@@ -326,15 +326,6 @@ void Display()
 	glutSwapBuffers();
 }
 
-void obroty(void)
-{
-	// zwiêkszenie k¹ta o 5 stopni po wykryciu
-	// bezczynnoœci systemu
-	if (kat == 360) kat = 0;
-	kat += 0.09;
-	// wymuszenie ponownego przerysowania okna
-	glutPostRedisplay();
-}
 // zmiana wielkoœci okna
 
 void Reshape(int width, int height)
@@ -403,7 +394,7 @@ void MouseMotion(int x, int y)
 	{
 		rotatey += 10.1 *(right - left) / glutGet(GLUT_WINDOW_WIDTH) *(x - button_x);
 		button_x = x;
-		rotatex += 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
+		rotatex -= 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
 		button_y = y;
 		glutPostRedisplay();
 	}
@@ -445,8 +436,6 @@ int main(int argc, char * argv[])
 
 	// obs³uga ruchu kursora myszki
 	glutMotionFunc(MouseMotion);
-
-	glutIdleFunc(obroty);
 
 	// wprowadzenie programu do obs³ugi pêtli komunikatów
 	glutMainLoop();

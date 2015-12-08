@@ -42,6 +42,15 @@ int cl = clock();
 GLfloat rotatex = 0.0;
 GLfloat rotatey = 0.0;
 
+
+//obrót sciany
+int rotateWallDepth = 0;
+GLfloat rotateWall = 0.0;
+osObrotu os = x;
+//GLfloat rotateWallx = 0.0;
+//GLfloat rotateWally = 0.0;
+//GLfloat rotateWallz = 0.0;
+
 // przesuniêcie
 
 GLfloat translatex = 0.0;
@@ -262,54 +271,108 @@ void timer(void)
 	glutPostRedisplay();
 }
 
+void LosujSciane()
+{
+
+}
+
 void Display()
 {
 	// licznik czasu
 	if (!frames++)
 		start_time = clock();
 	// kolor t³a - zawartoœæ bufora koloru
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.3, 0.3, 0.3, 1.0);
 
 	// czyszczenie bufora koloru i g³êbi
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //czyœci bufory
 	// wybór macierzy modelowania
 	glMatrixMode(GL_MODELVIEW);
 
-	// macierz modelowania = macierz jednostkowa
-	glLoadIdentity();
-
-
-
-	// przesuniêcie uk³adu wspó³rzêdnych obiektu do œrodka bry³y odcinania
-	glTranslatef(0, 0, -(neaar + faar) / 2);
-
-	// przesuniêcie obiektu - ruch myszk¹
-	glTranslatef(translatex, translatey, 0.0);
-
-	// skalowanie obiektu - klawisze "+" i "-"
-	glScalef(scale, scale, scale);
-
-	// obroty obiektu - klawisze kursora
-	glRotatef(rotatex, 1.0, 0, 0);
-	glRotatef(rotatey, 0, 1.0, 0);
-
-	glRotatef(kat, 0.0f, 1.0f, 0.0f);
-	glRotatef(kat, 0.0f, 0.0f, 1.0f);
-	GenerujKostkê();
-	timer();
 	// w³¹czenie testu bufora g³êbokoœci
 	glEnable(GL_DEPTH_TEST);
+
+	//glRotatef(kat, 0.0f, 1.0f, 0.0f);
+	//glRotatef(kat, 0.0f, 0.0f, 1.0f);
+	timer();
+	
+	
 
 	for (int x = 0; x < 3; x++){
 		for (int y = 0; y < 3; y++){
 			for (int z = 0; z < 3; z++){
 				int *kolor = kostka[x][y][z].kolor;
-				RysujSzescian(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f, kolor[0], kolor[1], kolor[2]);
+
+				// macierz modelowania = macierz jednostkowa
+				glLoadIdentity();
+
+				// przesuniêcie uk³adu wspó³rzêdnych obiektu do œrodka bry³y odcinania
+				glTranslatef(0, 0, -(neaar + faar) / 2);
+
+				// przesuniêcie obiektu - ruch myszk¹
+				glTranslatef(translatex, translatey, 0.0);
+
+				// skalowanie obiektu - klawisze "+" i "-"
+				glScalef(scale, scale, scale);
+
+				// obroty obiektu - prawa mysz
+				glRotatef(rotatex, 1.0, 0, 0);
+				glRotatef(rotatey, 0, 1.0, 0);
+
+
+
+				if (os == osObrotu::x)
+					if (x == rotateWallDepth){
+						glRotatef(rotateWall, 1.0, 0, 0);
+					}
+
+				if (os == osObrotu::y)
+					if (y == rotateWallDepth){
+						glRotatef(rotateWall, 0, 1.0, 0);
+					}
+
+				if (os == osObrotu::z)
+					if (z == rotateWallDepth){
+						glRotatef(rotateWall, 0, 0, 1.0);
+					}
+
+				glTranslatef(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f);
+
+
+				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotx), 1.0, 0, 0);
+				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obroty), 0, 1.0, 0);
+				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotz), 0, 0, 1.0);
+
+				RysujSzescian(0, 0, 0, kolor[0], kolor[1], kolor[2]);
 			}
 		}
 	}
 
+	os = x;
 
+	rotateWall += 0.1;
+	if (rotateWall >= 90){
+		rotateWall = 0;
+		
+		if (os == z)
+			ObrocMacierzSciany(os, lewo, rotateWallDepth);
+		else
+			ObrocMacierzSciany(os, prawo, rotateWallDepth);
+		
+		rotateWallDepth++;
+		if (rotateWallDepth > 2)
+			rotateWallDepth = 0;
+		
+		
+		if (os == x)
+			os = y;
+		else if (os == y)
+			os = x;
+		else if (os == z)
+			os = x;
+
+		LosujSciane();
+	}
 
 	glLoadIdentity();
 
@@ -404,6 +467,7 @@ void MouseMotion(int x, int y)
 
 int main(int argc, char * argv[])
 {
+	GenerujKostkê();
 	// inicjalizacja biblioteki GLUT
 	glutInit(&argc, argv);
 

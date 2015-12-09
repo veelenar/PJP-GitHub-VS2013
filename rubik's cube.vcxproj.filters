@@ -28,7 +28,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="glut.dll" />
   </ItemGroup>
   <ItemGroup>

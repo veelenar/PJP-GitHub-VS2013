@@ -15,16 +15,23 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\rubik%27s cube\Source.cpp">
+    <ClCompile Include="Kostka.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\rubik%27s cube\Kostka.cpp">
+    <ClCompile Include="Source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\rubik%27s cube\Kostka.h">
+    <ClInclude Include="Kostka.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="glut.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\glut.lib" />
   </ItemGroup>
 </Project>

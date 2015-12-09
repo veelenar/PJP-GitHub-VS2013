@@ -41,6 +41,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(ProjectDir)\libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -77,13 +79,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\rubik%27s cube\Kostka.cpp" />
-    <ClCompile Include="..\rubik%27s cube\Source.cpp" />
+    <ClCompile Include="Kostka.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\rubik%27s cube\Kostka.h" />
+    <ClInclude Include="Kostka.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="glut.dll">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="libs\glut.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets" Condition="Exists('packages\freeglut.redist.2.8.1.15\build\native\freeglut.redist.targets')" />
+    <Import Project="packages\freeglut.2.8.1.15\build\native\freeglut.targets" Condition="Exists('packages\freeglut.2.8.1.15\build\native\freeglut.targets')" />
   </ImportGroup>
 </Project>

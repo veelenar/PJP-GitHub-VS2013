@@ -28,18 +28,8 @@ struct elementKostki
 	int obrotz;
 };
 
-//struct kostkaRubika{
-//
-//	int obrot[3];
-//	elementKostki kostka[3][3][3];
-//	elementKostki* GetBrick(int x, int y, int z);
-//};
-
 extern elementKostki kostka[3][3][3];
 
 extern void GenerujKostkê();
-//bool anim;
-extern void WymienX(int x, int y, int z);
-extern void WymienY(int x, int y, int z);
-extern void WymienZ(int x, int y, int z);
 extern void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany);
+extern void Kostka_Ob_Sciany(osObrotu os, kierunekObrotu kierunek, int numerSciany);

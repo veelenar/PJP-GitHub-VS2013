@@ -97,11 +97,15 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 			switch (os){
 			case x:
 
-				if (kierunek == lewo)
+				if (kierunek == lewo){
 					obracanaMacierz[i][j].obrotx -= 1;
-				else if (kierunek == prawo)
+	
+				}
+				else if (kierunek == prawo){
 					obracanaMacierz[i][j].obrotx += 1;
 
+	
+				}
 				if (obracanaMacierz[i][j].obrotx < 0)
 					obracanaMacierz[i][j].obrotx = 3;
 				if (obracanaMacierz[i][j].obrotx > 3)
@@ -110,14 +114,23 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 
 				kostka[numerSciany][i][j] = obracanaMacierz[i][j];
 
+
 				break;
 			
 			case y:
 				
 				if (kierunek == lewo)
+				{
+			
 					obracanaMacierz[i][j].obroty -= 1;
+			
+				}
 				else if (kierunek == prawo)
+				{
+			
 					obracanaMacierz[i][j].obroty += 1;
+	
+				}
 
 				if (obracanaMacierz[i][j].obroty < 0)
 					obracanaMacierz[i][j].obroty = 3;
@@ -125,14 +138,20 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 					obracanaMacierz[i][j].obroty = 0;
 
 				kostka[i][numerSciany][j] = obracanaMacierz[i][j];
-
+	
 				break;
 			
 			case z:
 				if (kierunek == lewo)
+				{
+		
 					obracanaMacierz[i][j].obrotz -= 1;
+				}
 				else if (kierunek == prawo)
+				{
+		
 					obracanaMacierz[i][j].obrotz += 1;
+				}
 
 				if (obracanaMacierz[i][j].obrotz < 0)
 					obracanaMacierz[i][j].obrotz = 3;
@@ -140,223 +159,58 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 					obracanaMacierz[i][j].obrotz = 0;
 
 				kostka[i][j][numerSciany] = obracanaMacierz[i][j];
+		
 
 				break;
 			}
 		}
 }
 
-
-
-elementKostki* GetBrick(int x, int y, int z)
- {
-	return &kostka[x + 1][y + 1][z + 1];
+void Kostka_Ob_Sciany(osObrotu os, kierunekObrotu kierunek, int numerSciany){
+	int i, j;
+	if (os == x)
+	{
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				kostka[numerSciany][j][2 - i].kolor[0] = kostka[numerSciany][i][j].kolor[0];
+				kostka[numerSciany][j][2 - i].kolor[0] = kostka[numerSciany][i][j].kolor[0];
+			}
+			kostka[numerSciany][i][2].kolor[2] = kostka[numerSciany][0][i].kolor[1];
+			kostka[numerSciany][2][2 - i].kolor[1] = kostka[numerSciany][i][2].kolor[2];
+			kostka[numerSciany][i][0].kolor[2] = kostka[numerSciany][2][i].kolor[1];
+			kostka[numerSciany][0][2 - i].kolor[1] = kostka[numerSciany][i][0].kolor[2];
+		}
 	}
-
-int* GetNextBrick(int x, int y, int z, int* w)
- {//xyz obrot
-	int v[3] = { w[0], w[1], w[2] };
-	if (x<2)
-		 {
-		w[1] = -v[2];
-		w[2] = v[1];
+	else if (os == y)
+	{
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				kostka[2 - j][numerSciany][i].kolor[1] = kostka[i][numerSciany][j].kolor[1];
+				kostka[2 - j][numerSciany][i].kolor[1] = kostka[i][numerSciany][j].kolor[1];
+			}
+			kostka[2][numerSciany][i].kolor[0] = kostka[i][numerSciany][0].kolor[2];
+			kostka[2 - i][numerSciany][2].kolor[2] = kostka[2][numerSciany][i].kolor[0];
+			kostka[0][numerSciany][i].kolor[0] = kostka[i][numerSciany][2].kolor[2];
+			kostka[2 - i][numerSciany][0].kolor[2] = kostka[0][numerSciany][i].kolor[0];
 		}
-	else if (y<2)
-		 {
-		w[0] = -v[2];
-		w[2] = v[0];
-		}
-	else if (z<2)
-		 {
-		w[0] = -v[1];
-		w[1] = v[0];
-		}
-	
-		return w;
 	}
-
-void SetBrick(int* w, int kolorX, int kolorY, int kolorZ)
- {
-	GetBrick(w[0], w[1], w[2])->kolor[0] = kolorX;
-	GetBrick(w[0], w[1], w[2])->kolor[1] = kolorY;
-	GetBrick(w[0], w[1], w[2])->kolor[2] = kolorZ;
+	else if (os == z)
+	{
+		for (i = 0; i < 3; i++)
+		{
+			for (j = 0; j < 3; j++)
+			{
+				kostka[j][2 - i][numerSciany].kolor[2] = kostka[i][j][numerSciany].kolor[2];
+				kostka[j][2 - i][numerSciany].kolor[2] = kostka[i][j][numerSciany].kolor[2];
+			}
+			kostka[i][0][numerSciany].kolor[1] = kostka[2][i][numerSciany].kolor[0];
+			kostka[0][2 - i][numerSciany].kolor[0] = kostka[i][0][numerSciany].kolor[1];
+			kostka[i][2][numerSciany].kolor[1] = kostka[0][i][numerSciany].kolor[0];
+			kostka[2][2 - i][numerSciany].kolor[0] = kostka[i][2][numerSciany].kolor[1];
+		}
 	}
-
-void AktualizujKolory(int x, int y, int z)
- {
-	
-		if (x<2)
-		 {
-		WymienX(x, -1, -1);
-		WymienX(x, -1, 0);
-		}
-	else if (y<2)
-		 {
-		WymienY(-1, y, -1);
-		WymienY(-1, y, 0);
-		}
-	else if (z<2)
-		 {
-		WymienZ(-1, -1, z);
-		WymienZ(-1, 0, z);
-		}
 }
-
-void WymienX(int x, int y, int z)
-{
-	int temp[3] = { 0 };
-	int p[3], n[3];
-	p[0] = n[0] = x;
-	p[1] = n[1] = y;
-	p[2] = n[2] = z;
-	temp[0] = GetBrick(x, y, z)->kolor[0];
-	temp[1] = GetBrick(x, y, z)->kolor[1];
-	temp[2] = GetBrick(x, y, z)->kolor[2]; // temp 1kolor
-	for (int i = 0; i<3; i++){
-		GetNextBrick(x, 3, 3, n);
-		SetBrick(p, GetBrick(n[0], n[1], n[2])->kolor[0],
-			GetBrick(n[0], n[1], n[2])->kolor[2],
-			GetBrick(n[0], n[1], n[2])->kolor[1]);
-		p[0] = n[0];
-		p[1] = n[1];
-		p[2] = n[2];
-		
-	}
-	GetNextBrick(x, 3, 3, n);
-	SetBrick(p, temp[0],
-		temp[2],
-		temp[1]);
-	}
-
-void WymienY(int x, int y, int z)
- {
-	int temp[3] = { 0 };
-	int p[3], n[3];
-	p[0] = n[0] = x;
-	p[1] = n[1] = y;
-	p[2] = n[2] = z;
-	temp[0] = GetBrick(x, y, z)->kolor[0];
-	temp[1] = GetBrick(x, y, z)->kolor[1];
-	temp[2] = GetBrick(x, y, z)->kolor[2]; // temp 1kolor
-	for (int i = 0; i<3; i++){
-		GetNextBrick(3, y, 3, n);
-		SetBrick(p, GetBrick(n[0], n[1], n[2])->kolor[2],
-			GetBrick(n[0], n[1], n[2])->kolor[1],
-			GetBrick(n[0], n[1], n[2])->kolor[0]);
-		p[0] = n[0];
-		p[1] = n[1];
-		p[2] = n[2];
-		
-	}
-	GetNextBrick(3, y, 3, n);
-	SetBrick(p, temp[2],
-		temp[1],
-		temp[0]);
-	}
-
-void WymienZ(int x, int y, int z)
- {
-	int temp[3] = { 0 };
-	int p[3], n[3];
-	p[0] = n[0] = x;
-	p[1] = n[1] = y;
-	p[2] = n[2] = z;
-	temp[0] = GetBrick(x, y, z)->kolor[0];
-	temp[1] = GetBrick(x, y, z)->kolor[1];
-	temp[2] = GetBrick(x, y, z)->kolor[2]; // temp 1kolor
-	for (int i = 0; i<3; i++){
-		GetNextBrick(3, 3, z, n);
-		SetBrick(p, GetBrick(n[0], n[1], n[2])->kolor[1],
-			GetBrick(n[0], n[1], n[2])->kolor[0],
-			GetBrick(n[0], n[1], n[2])->kolor[2]);
-		p[0] = n[0];
-		p[1] = n[1];
-		p[2] = n[2];
-		
-	}
-	GetNextBrick(3, 3, z, n);
-	SetBrick(p, temp[1],
-		temp[0],
-		temp[2]);
-	}
-//void RysujPlaszczyzne(int x, int y, int z)//,int angle
-// {
-//		//ewentualny obrot
-//		if (x<2)
-//		 {
-//		for (int j = -1; j <= 1; j++)
-//			 for (int k = -1; k <= 1; k++)
-//			 {
-//			glTranslatef(x / 2.0f, j / 2.0f, k / 2.0f);
-//			RysujSzescian(0.5, GetBrick(x, j, k));
-//			}
-//		}
-//	else if (y<2)
-//		 {
-//		for (int j = -1; j <= 1; j++)
-//			 for (int k = -1; k <= 1; k++)
-//			 {
-//			glTranslatef(j / 2.0f, y / 2.0f, k / 2.0f);
-//			RysujSzescian(0.5, GetBrick(j, y, k));
-//			}
-//		}
-//	else if (z<2)
-//		 {
-//		for (int j = -1; j <= 1; j++)
-//			 for (int k = -1; k <= 1; k++)
-//			 {
-//			glTranslatef(j / 2.0f, k / 2.0f, z / 2.0f);
-//			RysujSzescian(0.5, GetBrick(j, k, z));
-//			}
-//		}
-//	}
-
-//void animate(int* obrot)
-// {
-//	static float angle = 0.0f;
-//	if (anim)
-//		{
-//		angle += 1.5f;
-//		if (angle > 90)
-//			 {
-//			anim = false;
-//			angle = 0.0f;
-//			AktualizujKolory(obrot[0], obrot[1], obrot[2]);
-//			}
-//		if (obrot[0]<2)
-//			 {
-//			for (int i = -1; i<obrot[0]; i++) RysujPlaszczyzne(i, 3, 3);
-//
-//			glRotatef(-angle, 1, 0, 0);
-//			RysujPlaszczyzne(obrot[0], 3, 3);
-//
-//			for (int i = obrot[0] + 1; i<2; i++) RysujPlaszczyzne(i, 3, 3);
-//			}
-//		else if (obrot[1]<2)
-//			 {
-//			for (int i = -1; i<obrot[1]; i++) RysujPlaszczyzne(3, i, 3);
-//
-//			glRotatef(angle, 0, 1, 0);
-//			RysujPlaszczyzne(3, obrot[1], 3);
-//
-//			for (int i = obrot[1] + 1; i<2; i++) RysujPlaszczyzne(3, i, 3);
-//			}
-//		else if (obrot[2]<2)
-//			 {
-//			for (int i = -1; i<obrot[2]; i++) RysujPlaszczyzne(3, 3, i);
-//
-//			glRotatef(angle, 0, 0, 1);
-//			RysujPlaszczyzne(3, 3, obrot[2]);
-//
-//			for (int i = obrot[2] + 1; i<2; i++) RysujPlaszczyzne(3, 3, i);
-//			}
-//		
-//			}
-//	else
-//		 {
-//		RysujPlaszczyzne(-1, 3, 3);
-//		RysujPlaszczyzne(0, 3, 3);
-//		RysujPlaszczyzne(1, 3, 3);
-//		}
-//	}
-

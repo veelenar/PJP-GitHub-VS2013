@@ -36,7 +36,10 @@ const GLdouble faar = 70.0;
 
 GLfloat scale = 3.0;
 
+//zegar
+
 int cl = clock();
+
 // k¹ty obrotu
 
 GLfloat rotatex = 0.0;
@@ -309,9 +312,6 @@ void Display()
 				// przesuniêcie uk³adu wspó³rzêdnych obiektu do œrodka bry³y odcinania
 				glTranslatef(0, 0, -(neaar + faar) / 2);
 
-				// przesuniêcie obiektu - ruch myszk¹
-				glTranslatef(translatex, translatey, 0.0);
-
 				// skalowanie obiektu - klawisze "+" i "-"
 				glScalef(scale, scale, scale);
 
@@ -348,15 +348,17 @@ void Display()
 		}
 	}
 
-	os = x;
+	//os = z;
 
 	rotateWall += 0.1;
 	if (rotateWall >= 90){
 		rotateWall = 0;
 		
 		if (os == z)
+			/*Kostka_Ob_Sciany(os, lewo, rotateWallDepth);*/
 			ObrocMacierzSciany(os, lewo, rotateWallDepth);
 		else
+			/*Kostka_Ob_Sciany(os, prawo, rotateWallDepth);*/
 			ObrocMacierzSciany(os, prawo, rotateWallDepth);
 		
 		rotateWallDepth++;

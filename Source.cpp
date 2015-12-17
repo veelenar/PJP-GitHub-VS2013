@@ -47,7 +47,7 @@ GLfloat rotatey = 0.0;
 
 
 //obrót sciany
-int rotateWallDepth = 0;
+int rotateWallDepth = 1;
 GLfloat rotateWall = 0.0;
 osObrotu os = x;
 //GLfloat rotateWallx = 0.0;
@@ -321,6 +321,7 @@ void Display()
 
 
 
+
 				if (os == osObrotu::x)
 					if (x == rotateWallDepth){
 						glRotatef(rotateWall, 1.0, 0, 0);
@@ -335,31 +336,34 @@ void Display()
 					if (z == rotateWallDepth){
 						glRotatef(rotateWall, 0, 0, 1.0);
 					}
-
 				glTranslatef(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f);
 
+					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotz), 0, 0, 1.0f);
+				
+					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obroty), 0, 1.0f, 0);
 
-				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotx), 1.0, 0, 0);
-				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obroty), 0, 1.0, 0);
-				glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotz), 0, 0, 1.0);
-
+					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotx), 1.0f, 0, 0);
+	
+				
 				RysujSzescian(0, 0, 0, kolor[0], kolor[1], kolor[2]);
 			}
 		}
 	}
 
 	//os = z;
-
-	rotateWall += 0.1;
+	rotateWall += 0.05;
 	if (rotateWall >= 90){
 		rotateWall = 0;
 		
-		if (os == z)
-			/*Kostka_Ob_Sciany(os, lewo, rotateWallDepth);*/
+		if (os == z){
+			//Kostka_Ob_Sciany(os, lewo, rotateWallDepth);
 			ObrocMacierzSciany(os, lewo, rotateWallDepth);
+		}
 		else
+		{
 			/*Kostka_Ob_Sciany(os, prawo, rotateWallDepth);*/
 			ObrocMacierzSciany(os, prawo, rotateWallDepth);
+		}
 		
 		rotateWallDepth++;
 		if (rotateWallDepth > 2)
@@ -369,7 +373,7 @@ void Display()
 		if (os == x)
 			os = y;
 		else if (os == y)
-			os = x;
+			os = z;
 		else if (os == z)
 			os = x;
 

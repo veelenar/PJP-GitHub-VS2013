@@ -8,7 +8,7 @@ void GenerujKostkê(){
 	for (int x = 0; x < 3; x++){
 		for (int y = 0; y < 3; y++){
 			for (int z = 0; z < 3; z++){
-				/*kostka[x][y][z].iloscScian = dwie;*/
+				kostka[x][y][z].iloscScian = dwie;
 				kostka[x][y][z].kolor[0] = 0;
 				kostka[x][y][z].kolor[1] = 0;
 				kostka[x][y][z].kolor[2] = 0;
@@ -20,12 +20,12 @@ void GenerujKostkê(){
 		}
 	}
 
-	//kostka[1][1][0].iloscScian = jedna;
-	//kostka[1][1][2].iloscScian = jedna;
-	//kostka[1][0][1].iloscScian = jedna;
-	//kostka[1][2][1].iloscScian = jedna;
-	//kostka[0][1][1].iloscScian = jedna;
-	//kostka[2][1][1].iloscScian = jedna;
+	kostka[1][1][0].iloscScian = jedna;
+	kostka[1][1][2].iloscScian = jedna;
+	kostka[1][0][1].iloscScian = jedna;
+	kostka[1][2][1].iloscScian = jedna;
+	kostka[0][1][1].iloscScian = jedna;
+	kostka[2][1][1].iloscScian = jedna;
 
 	for (int i=0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
@@ -36,10 +36,10 @@ void GenerujKostkê(){
 			kostka[i][j][0].kolor[2] = 4;
 			kostka[i][j][2].kolor[2] = 1;
 
-		/*	if ((i == 0 && j == 0) || (i == 0 && j == 2) || (i == 2 && j == 0) || (i == 2 && j == 2)){
+			if ((i == 0 && j == 0) || (i == 0 && j == 2) || (i == 2 && j == 0) || (i == 2 && j == 2)){
 				kostka[i][j][0].iloscScian = trzy;
 				kostka[i][j][2].iloscScian = trzy;
-			}*/
+			}
 		}
 	}
 }
@@ -99,64 +99,69 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 
 				if (kierunek == lewo){
 					obracanaMacierz[i][j].obrotx -= 1;
-	
 				}
 				else if (kierunek == prawo){
 					obracanaMacierz[i][j].obrotx += 1;
-
-	
 				}
 				if (obracanaMacierz[i][j].obrotx < 0)
+				{
 					obracanaMacierz[i][j].obrotx = 3;
-				if (obracanaMacierz[i][j].obrotx > 3)
+				}
+				if (obracanaMacierz[i][j].obrotx > 3){
 					obracanaMacierz[i][j].obrotx = 0;
+				}
 
 
 				kostka[numerSciany][i][j] = obracanaMacierz[i][j];
 
 
 				break;
-			
+
 			case y:
-				
+
 				if (kierunek == lewo)
 				{
-			
+
 					obracanaMacierz[i][j].obroty -= 1;
-			
 				}
 				else if (kierunek == prawo)
 				{
-			
+
 					obracanaMacierz[i][j].obroty += 1;
-	
 				}
 
-				if (obracanaMacierz[i][j].obroty < 0)
+				if (obracanaMacierz[i][j].obroty < 0){
 					obracanaMacierz[i][j].obroty = 3;
+				}
 				if (obracanaMacierz[i][j].obroty > 3)
+				{
 					obracanaMacierz[i][j].obroty = 0;
+				}
 
 				kostka[i][numerSciany][j] = obracanaMacierz[i][j];
-	
+
 				break;
-			
+
 			case z:
 				if (kierunek == lewo)
 				{
-		
+
 					obracanaMacierz[i][j].obrotz -= 1;
 				}
 				else if (kierunek == prawo)
 				{
-		
+
 					obracanaMacierz[i][j].obrotz += 1;
 				}
 
 				if (obracanaMacierz[i][j].obrotz < 0)
+				{
 					obracanaMacierz[i][j].obrotz = 3;
+				}
 				if (obracanaMacierz[i][j].obrotz > 3)
+				{
 					obracanaMacierz[i][j].obrotz = 0;
+				}
 
 				kostka[i][j][numerSciany] = obracanaMacierz[i][j];
 		
@@ -165,6 +170,113 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 			}
 		}
 }
+//void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
+//{
+//	elementKostki obracanaMacierz[3][3][3];
+//
+//	if (kierunek == lewo)
+//		//w lewo
+//		for (int i = 2; i >= 0; i--)
+//		{
+//			for (int j = 0; j < 3; j++)
+//			{
+//				for (int k = 0; k < 3; k++)
+//				{
+//					obracanaMacierz[j][2 - i][k] = kostka[i][j][k];
+//				}
+//			}
+//		}
+//
+//	if (kierunek == prawo)
+//		//w prawo
+//		for (int j = 2; j >= 0; j--)
+//		{
+//			for (int i = 0; i < 3; i++)
+//			{
+//				for (int k = 0; k < 3; k++)
+//				{
+//					obracanaMacierz[2 - j][i][k] = kostka[i][j][k];
+//				}
+//			}
+//		}
+//
+//	for (int i = 0; i < 3; i++)
+//		for (int j = 0; j < 3; j++){
+//			switch (os){
+//			case x:
+//
+//				if (kierunek == lewo){
+//					kostka[numerSciany][i][j].obrotx -= 1;
+//				}
+//				else if (kierunek == prawo){
+//					kostka[numerSciany][i][j].obrotx += 1;
+//				}
+//
+//				if (kostka[numerSciany][i][j].obrotx < 0)
+//				{
+//					kostka[numerSciany][i][j].obrotx = 3;
+//				}
+//
+//				if (kostka[numerSciany][i][j].obrotx > 3)
+//				{
+//					kostka[numerSciany][i][j].obrotx = 0;
+//				}
+//
+//
+//				kostka[numerSciany][i][j] = obracanaMacierz[numerSciany][i][j];
+//
+//
+//				break;
+//
+//			case y:
+//
+//				if (kierunek == lewo)
+//				{
+//					kostka[i][numerSciany][j].obroty -= 1;
+//				}
+//				else if (kierunek == prawo)
+//				{
+//					kostka[i][numerSciany][j].obroty += 1;
+//				}
+//
+//				if (kostka[i][numerSciany][j].obroty < 0){
+//					kostka[i][numerSciany][j].obroty = 3;
+//				}
+//				if (kostka[i][numerSciany][j].obroty > 3)
+//				{
+//					kostka[i][numerSciany][j].obroty = 0;
+//				}
+//
+//				kostka[i][numerSciany][j] = obracanaMacierz[i][numerSciany][j];
+//
+//				break;
+//
+//			case z:
+//				if (kierunek == lewo)
+//				{
+//					kostka[i][j][numerSciany].obrotz -= 1;
+//				}
+//				else if (kierunek == prawo)
+//				{
+//					kostka[i][j][numerSciany].obrotz += 1;
+//				}
+//
+//				if (kostka[i][j][numerSciany].obrotz < 0)
+//				{
+//					kostka[i][j][numerSciany].obrotz = 3;
+//				}
+//				if (kostka[i][j][numerSciany].obrotz > 3)
+//				{
+//					kostka[i][j][numerSciany].obrotz = 0;
+//				}
+//
+//				kostka[i][j][numerSciany] = obracanaMacierz[i][j][numerSciany];
+//
+//
+//				break;
+//			}
+//		}
+//}
 
 void Kostka_Ob_Sciany(osObrotu os, kierunekObrotu kierunek, int numerSciany){
 	int i, j;

@@ -47,7 +47,7 @@ GLfloat rotatey = 0.0;
 
 
 //obrót sciany
-int rotateWallDepth = 1;
+int rotateWallDepth = 0;
 GLfloat rotateWall = 0.0;
 osObrotu os = x;
 //GLfloat rotateWallx = 0.0;
@@ -65,7 +65,7 @@ int button_state = GLUT_UP;
 
 // po³o¿enie kursora myszki
 
-int button_x, button_y;
+int button_x, button_y, button_z;
 
 extern void UstawKolor(int numerKoloru);
 
@@ -322,29 +322,31 @@ void Display()
 
 
 
-				if (os == osObrotu::x)
-					if (x == rotateWallDepth){
+
+				if (os == osObrotu::x){
+					if (rotateWallDepth == x){
 						glRotatef(rotateWall, 1.0, 0, 0);
 					}
-
-				if (os == osObrotu::y)
-					if (y == rotateWallDepth){
+				}
+				else if (os == osObrotu::y)
+				{
+					if (rotateWallDepth == y){
 						glRotatef(rotateWall, 0, 1.0, 0);
 					}
-
-				if (os == osObrotu::z)
-					if (z == rotateWallDepth){
+				}
+				else if (os == osObrotu::z)
+				{
+					if (rotateWallDepth == z){
 						glRotatef(rotateWall, 0, 0, 1.0);
 					}
-				glTranslatef(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f);
+				}
 
-					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotz), 0, 0, 1.0f);
-				
-					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obroty), 0, 1.0f, 0);
+					glTranslatef(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f);
 
-					glRotatef((GLfloat)(90.0 * kostka[x][y][z].obrotx), 1.0f, 0, 0);
-	
-				
+						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotz)), 0, 0, 1.0f);
+						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obroty)), 0, 1.0f, 0);
+						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotx)), 1.0f, 0, 0);
+						
 				RysujSzescian(0, 0, 0, kolor[0], kolor[1], kolor[2]);
 			}
 		}
@@ -355,29 +357,26 @@ void Display()
 	if (rotateWall >= 90){
 		rotateWall = 0;
 		
-		if (os == z){
-			//Kostka_Ob_Sciany(os, lewo, rotateWallDepth);
+		if (os == osObrotu::z){
 			ObrocMacierzSciany(os, lewo, rotateWallDepth);
 		}
 		else
 		{
-			/*Kostka_Ob_Sciany(os, prawo, rotateWallDepth);*/
 			ObrocMacierzSciany(os, prawo, rotateWallDepth);
 		}
 		
 		rotateWallDepth++;
 		if (rotateWallDepth > 2)
 			rotateWallDepth = 0;
-		
-		
-		if (os == x)
-			os = y;
-		else if (os == y)
-			os = z;
-		else if (os == z)
-			os = x;
 
-		LosujSciane();
+		if (os == osObrotu::x)
+			os = osObrotu::y;
+		else if (os == osObrotu::y)
+			os = osObrotu::z;
+		else if (os == osObrotu::z)
+			os = osObrotu::x;
+
+		//LosujSciane();
 	}
 
 	glLoadIdentity();
@@ -443,7 +442,7 @@ void MouseButton(int button, int state, int x, int y)
 {
 	if (button == GLUT_RIGHT_BUTTON)
 	{
-		// zapamiêtanie stanu lewego przycisku myszki
+		// zapamiêtanie stanu prawego przycisku myszki
 		button_state = state;
 
 		// zapamiêtanie po³o¿enia kursora myszki
@@ -453,19 +452,48 @@ void MouseButton(int button, int state, int x, int y)
 			button_y = y;
 		}
 	}
+	else if (button == GLUT_LEFT_BUTTON)
+	{
+		if (state == GLUT_DOWN)
+		{
+			button_x = x;
+			button_y = y;
+		
+			if (os == osObrotu::z){
+				ObrocMacierzSciany(os, lewo, rotateWallDepth);
+			}
+			else
+			{
+				ObrocMacierzSciany(os, prawo, rotateWallDepth);
+			}
+		}
+	}
 }
 
 // obs³uga ruchu kursora myszki
 
 void MouseMotion(int x, int y)
 {
-	if (button_state == GLUT_DOWN)
+	if (GLUT_RIGHT_BUTTON)
 	{
-		rotatey += 10.1 *(right - left) / glutGet(GLUT_WINDOW_WIDTH) *(x - button_x);
-		button_x = x;
-		rotatex -= 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
-		button_y = y;
-		glutPostRedisplay();
+		if (button_state == GLUT_DOWN)
+		{
+			rotatey += 10.1 *(right - left) / glutGet(GLUT_WINDOW_WIDTH) *(x - button_x);
+			button_x = x;
+			rotatex -= 10.1 *(top - bottom) / glutGet(GLUT_WINDOW_HEIGHT) *(button_y - y);
+			button_y = y;
+		}
+	}
+	else if (GLUT_LEFT_BUTTON)
+	{
+		if (button_state == GLUT_DOWN)
+		{
+			glRotatef(rotateWall, 1.0, 0, 0);
+			rotateWall += glutGet(GLUT_WINDOW_WIDTH);
+			button_x = x;
+			rotateWall += glutGet(GLUT_WINDOW_HEIGHT);
+			button_y = y;
+		}
 	}
 }
 
@@ -503,9 +531,9 @@ int main(int argc, char * argv[])
 
 	// obs³uga przycisków myszki
 	glutMouseFunc(MouseButton);
-
 	// obs³uga ruchu kursora myszki
 	glutMotionFunc(MouseMotion);
+
 
 	// wprowadzenie programu do obs³ugi pêtli komunikatów
 	glutMainLoop();

@@ -44,7 +44,8 @@ int cl = clock();
 
 GLfloat rotatex = 0.0;
 GLfloat rotatey = 0.0;
-
+GLfloat pozycjax = 0.0;
+GLfloat pozycjay = 0.0;
 
 //obrót sciany
 int rotateWallDepth = 0;
@@ -63,9 +64,10 @@ float kat = 0;
 
 int button_state = GLUT_UP;
 
+bool pressed = false;
 // po³o¿enie kursora myszki
 
-int button_x, button_y, button_z;
+int button_x, button_y;
 
 extern void UstawKolor(int numerKoloru);
 
@@ -79,8 +81,11 @@ long start_time = 0;
 
 // tablica znaków ze wartoœci¹ FPS
 
-char time_string[100] = "TEXT:";
-
+char time_string[100];
+char button1_string[100];
+char button2_string[100];
+char button3_string[100];
+char button4_string[100];
 // funkcja rysuj¹ca napis w wybranym miejscu
 
 void DrawString(GLfloat x, GLfloat y, char * string)
@@ -270,6 +275,10 @@ void timer(void)
 	setne = sekundy % 1000 / 10;
 	sekundy /= 1000;
 	sprintf(time_string, "Czas: %2d: %2d: %2d", (sekundy / 60) % 59, sekundy % 60, setne);
+	sprintf(button1_string, "ZERUJ"); 
+	sprintf(button2_string, "WYMIESZAJ");
+	sprintf(button3_string, "START");
+	sprintf(button4_string, "STOP");
 
 	glutPostRedisplay();
 }
@@ -277,6 +286,21 @@ void timer(void)
 void LosujSciane()
 {
 
+}
+
+void RysujPrzycisk(float x, float y, float z)
+{
+
+	float da = 0.6f / 2;
+	UstawKolor(0);
+	glLineWidth(3.5f);
+	glBegin(GL_LINE_LOOP);
+	//tylna
+	glVertex3f(x + 2.5f, y - 1.0f, z - da);
+	glVertex3f(x + 2.5f, y + da, z - da);
+	glVertex3f(x - 2.5f, y + da, z - da);
+	glVertex3f(x - 2.5f, y - 1.0f, z - da);
+	glEnd();
 }
 
 void Display()
@@ -353,7 +377,8 @@ void Display()
 	}
 
 	//os = z;
-	rotateWall += 0.05;
+	if (!pressed)
+		rotateWall += 0.05;
 	if (rotateWall >= 90){
 		rotateWall = 0;
 		
@@ -380,13 +405,19 @@ void Display()
 	}
 
 	glLoadIdentity();
-
 	glTranslatef(0, 0, -neaar);
+	RysujPrzycisk(-10.0f, 9.0f, 0.0f);
+	RysujPrzycisk(10.0f, -5.5f, 0.0f);
+	RysujPrzycisk(0.0f, -5.5f, 0.0f);
+	RysujPrzycisk(-10.0f, -5.5f, 0.0f);
 	glColor3ub(255, 255, 255);
 
 	// narysowanie napisu
 	DrawString(-12.5, 9.5, time_string);
-
+	DrawString(-10.87, 8.60, button1_string);
+	DrawString(8.8, -6.0, button2_string);
+	DrawString(-0.5, -6.0, button4_string);
+	DrawString(-10.70, -6.0, button3_string);
 	// skierowanie poleceñ do wykonania
 	glFlush();
 
@@ -458,14 +489,11 @@ void MouseButton(int button, int state, int x, int y)
 		{
 			button_x = x;
 			button_y = y;
-		
-			if (os == osObrotu::z){
-				ObrocMacierzSciany(os, lewo, rotateWallDepth);
-			}
-			else
-			{
-				ObrocMacierzSciany(os, prawo, rotateWallDepth);
-			}
+			/*if (pozycjax <= -10.0f + 2.5f && pozycjax >= -10.0f - 2.5f && pozycjay <= 9.0f && pozycjay >= 9.0f - 1.0f){*/
+				pressed = !pressed;
+			/*}*/
+			if (!pressed)
+				glutPostRedisplay();
 		}
 	}
 }
@@ -488,10 +516,9 @@ void MouseMotion(int x, int y)
 	{
 		if (button_state == GLUT_DOWN)
 		{
-			glRotatef(rotateWall, 1.0, 0, 0);
-			rotateWall += glutGet(GLUT_WINDOW_WIDTH);
+			pozycjax = (-10.0f + 2.5f) / glutGet(GLUT_WINDOW_WIDTH)*(x - button_x);
 			button_x = x;
-			rotateWall += glutGet(GLUT_WINDOW_HEIGHT);
+			pozycjay = (9.0f - 1.0f) / glutGet(GLUT_WINDOW_HEIGHT)*(button_y - y);
 			button_y = y;
 		}
 	}

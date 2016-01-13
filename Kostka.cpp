@@ -29,8 +29,8 @@ void GenerujKostkê(){
 
 	for (int i=0; i < 3; i++){
 		for (int j = 0; j < 3; j++){
-			kostka[0][i][j].kolor[0] = 6;
-			kostka[2][i][j].kolor[0] = 5;
+			kostka[0][i][j].kolor[0] = 5;
+			kostka[2][i][j].kolor[0] = 6;
 			kostka[i][0][j].kolor[1] = 3;
 			kostka[i][2][j].kolor[1] = 2;
 			kostka[i][j][0].kolor[2] = 4;
@@ -82,7 +82,7 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 		}
 	}
 
-	if (kierunek == prawo)
+	else if (kierunek == prawo)
 	//w prawo
 	for (int j = 2; j >= 0; j--)
 	{
@@ -91,7 +91,9 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 			obracanaMacierz[2 - j][i] = macierz[i][j];
 		}
 	}
-
+	///////////////////////////////////////////////////////////////////
+	// Obrót  kosteczek                                              //
+	///////////////////////////////////////////////////////////////////
 	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++){
 			switch (os){
@@ -119,12 +121,12 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 
 			case y:
 
-				if (kierunek == lewo)
+				if (kierunek == prawo)
 				{
 
 					obracanaMacierz[i][j].obroty -= 1;
 				}
-				else if (kierunek == prawo)
+				else if (kierunek == lewo)
 				{
 
 					obracanaMacierz[i][j].obroty += 1;
@@ -143,12 +145,12 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 				break;
 
 			case z:
-				if (kierunek == lewo)
+				if (kierunek == prawo)
 				{
 
 					obracanaMacierz[i][j].obrotz -= 1;
 				}
-				else if (kierunek == prawo)
+				else if (kierunek == lewo)
 				{
 
 					obracanaMacierz[i][j].obrotz += 1;

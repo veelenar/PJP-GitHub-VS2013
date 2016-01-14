@@ -44,8 +44,8 @@ int cl = clock();
 
 GLfloat rotatex = 0.0;
 GLfloat rotatey = 0.0;
-GLfloat pozycjax = 0.0;
-GLfloat pozycjay = 0.0;
+GLint pozycjax = 0.0;
+GLint pozycjay = 0.0;
 
 //obrót sciany
 int rotateWallDepth = 0;
@@ -63,8 +63,9 @@ float kat = 0;
 // wskaŸnik naciœniêcia lewego przycisku myszki
 
 int button_state = GLUT_UP;
-
+bool button = false;
 bool pressed = false;
+bool zeruj = false;
 // po³o¿enie kursora myszki
 
 int button_x, button_y;
@@ -267,24 +268,44 @@ void UstawKolor(int numerKoloru)
 		break;
 	}
 }
-
+bool timer_state = 0;
 void timer(void)
 {
 	int sekundy, setne = 0;
-	sekundy = clock();
-	setne = sekundy % 1000 / 10;
-	sekundy /= 1000;
-	sprintf(time_string, "Czas: %2d: %2d: %2d", (sekundy / 60) % 59, sekundy % 60, setne);
-	sprintf(button1_string, "ZERUJ"); 
-	sprintf(button2_string, "WYMIESZAJ");
-	sprintf(button3_string, "START");
-	sprintf(button4_string, "STOP");
+	int przerwa = 0;
+	if (timer_state == true)
+	{
+		sekundy = clock();
+		setne = (sekundy-przerwa) % 1000 / 10;
+		sekundy /= 1000;
+		sprintf(time_string, "Czas: %2d: %2d: %2d", (sekundy / 60) % 59, sekundy % 60, setne);
+	}
+	else if (timer_state == false)
+	{
+		przerwa += clock();
+	}
+	if (zeruj == true)
+	{
+		sekundy = clock()-przerwa;
+	}
 
 	glutPostRedisplay();
 }
 
-void LosujSciane()
+int LosujSciane()
 {
+	int wall = (rand() % (int)(3));
+	if (wall != 1) return wall;
+	return LosujSciane();
+}
+
+osObrotu LosujOs() {
+	return (osObrotu)(rand() % (int)3);
+}
+
+void LosujObrot() {
+	rotateWallDepth = LosujSciane();
+	os = LosujOs();
 
 }
 
@@ -389,19 +410,18 @@ void Display()
 		{
 			ObrocMacierzSciany(os, prawo, rotateWallDepth);
 		}
-		
 		rotateWallDepth++;
 		if (rotateWallDepth > 2)
 			rotateWallDepth = 0;
 
-		if (os == osObrotu::x)
+		/*if (os == osObrotu::x)
 			os = osObrotu::y;
 		else if (os == osObrotu::y)
 			os = osObrotu::z;
 		else if (os == osObrotu::z)
-			os = osObrotu::x;
+			os = osObrotu::x;*/
 
-		//LosujSciane();
+		LosujObrot();
 	}
 
 	glLoadIdentity();
@@ -412,6 +432,10 @@ void Display()
 	RysujPrzycisk(-10.0f, -5.5f, 0.0f);
 	glColor3ub(255, 255, 255);
 
+	sprintf(button1_string, "ZERUJ");
+	sprintf(button2_string, "WYMIESZAJ");
+	sprintf(button3_string, "START");
+	sprintf(button4_string, "STOP");
 	// narysowanie napisu
 	DrawString(-12.5, 9.5, time_string);
 	DrawString(-10.87, 8.60, button1_string);
@@ -489,14 +513,27 @@ void MouseButton(int button, int state, int x, int y)
 		{
 			button_x = x;
 			button_y = y;
-			/*if (pozycjax <= -10.0f + 2.5f && pozycjax >= -10.0f - 2.5f && pozycjay <= 9.0f && pozycjay >= 9.0f - 1.0f){*/
-				pressed = !pressed;
-			/*}*/
-			if (!pressed)
+			printf("x: %i; y: %i\n", button_x, button_y);
+			printf("posx: %i; posy: %i\n", pozycjax, pozycjay);
+			if (button_x >= 27 && button_x <= 173 && button_y >= 24 && button_y <= 60){
+				/*pressed = !pressed;*/
+				zeruj = true;
+			}
+	/*		if (!pressed)
+				glutPostRedisplay();*/
+
+			if (button_x >= 27 && button_x <= 173 && button_y >= 456 && button_y <= 492){
+				timer_state = true;
+			}
+			if (button_x >= 324 && button_x <= 474 && button_y >= 456 && button_y <= 492){
+				timer_state = false;
+			}
 				glutPostRedisplay();
+
+				printf("timer state: %i\n",timer_state);
+			}
 		}
 	}
-}
 
 // obs³uga ruchu kursora myszki
 
@@ -516,9 +553,7 @@ void MouseMotion(int x, int y)
 	{
 		if (button_state == GLUT_DOWN)
 		{
-			pozycjax = (-10.0f + 2.5f) / glutGet(GLUT_WINDOW_WIDTH)*(x - button_x);
 			button_x = x;
-			pozycjay = (9.0f - 1.0f) / glutGet(GLUT_WINDOW_HEIGHT)*(button_y - y);
 			button_y = y;
 		}
 	}

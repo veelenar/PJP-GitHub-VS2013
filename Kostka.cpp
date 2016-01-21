@@ -170,12 +170,12 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 				if (kierunek == prawo)
 				{
 
-					obracanaMacierz[i][numerSciany][j].obroty -= 1;
+					obracanaMacierz[i][numerSciany][j].obroty += 1;
 				}
 				else if (kierunek == lewo)
 				{
 
-					obracanaMacierz[i][numerSciany][j].obroty += 1;
+					obracanaMacierz[i][numerSciany][j].obroty -= 1;
 				}
 
 				if (obracanaMacierz[i][numerSciany][j].obroty < 0){
@@ -193,13 +193,12 @@ void ObrocMacierzSciany(osObrotu os, kierunekObrotu kierunek, int numerSciany)
 			case z:
 				if (kierunek == prawo)
 				{
-
-					obracanaMacierz[i][j][numerSciany].obrotz -= 1;
+					obracanaMacierz[i][j][numerSciany].obrotz += 1;
 				}
 				else if (kierunek == lewo)
 				{
 
-					obracanaMacierz[i][j][numerSciany].obrotz += 1;
+					obracanaMacierz[i][j][numerSciany].obrotz -= 1;
 				}
 
 				if (obracanaMacierz[i][j][numerSciany].obrotz < 0)

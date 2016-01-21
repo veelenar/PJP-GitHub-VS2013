@@ -64,7 +64,7 @@ float kat = 0;
 
 int button_state = GLUT_UP;
 bool button = false;
-bool pressed = false;
+bool pressed = true;
 bool zeruj = false;
 // po³o¿enie kursora myszki
 
@@ -323,7 +323,7 @@ void RysujPrzycisk(float x, float y, float z)
 	glVertex3f(x - 2.5f, y - 1.0f, z - da);
 	glEnd();
 }
-
+int i = 0;
 void Display()
 {
 	// licznik czasu
@@ -387,11 +387,12 @@ void Display()
 				}
 
 					glTranslatef(x*0.6f - 0.6f, (y*-0.6f) + 0.6, (z*-0.6f) + 0.6f);
+					glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotz)), 0, 0, 1.0f);
+					glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obroty)), 0, 1.0f, 0);
+					glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotx)), 1.0f, 0, 0);
+					
+					
 
-						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotz)), 0, 0, 1.0f);
-						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obroty)), 0, 1.0f, 0);
-						glRotatef((GLfloat)(90.0f * (float)(kostka[x][y][z].obrotx)), 1.0f, 0, 0);
-						
 				RysujSzescian(0, 0, 0, kolor[0], kolor[1], kolor[2]);
 			}
 		}
@@ -410,11 +411,11 @@ void Display()
 		{
 			ObrocMacierzSciany(os, prawo, rotateWallDepth);
 		}
-		rotateWallDepth++;
+	/*	rotateWallDepth++;
 		if (rotateWallDepth > 2)
 			rotateWallDepth = 0;
 
-		/*if (os == osObrotu::x)
+		if (os == osObrotu::x)
 			os = osObrotu::y;
 		else if (os == osObrotu::y)
 			os = osObrotu::z;
@@ -422,6 +423,13 @@ void Display()
 			os = osObrotu::x;*/
 
 		LosujObrot();
+		if (i == 3){
+			pressed = true;
+			i = 0;
+		}
+		i++;
+		if (pressed == true)
+			i = 0;
 	}
 
 	glLoadIdentity();
@@ -527,6 +535,9 @@ void MouseButton(int button, int state, int x, int y)
 			}
 			if (button_x >= 324 && button_x <= 474 && button_y >= 456 && button_y <= 492){
 				timer_state = false;
+			}
+			if (button_x >= 624 && button_x <= 771 && button_y >= 456 && button_y <= 492){
+				pressed = !pressed;
 			}
 				glutPostRedisplay();
 
